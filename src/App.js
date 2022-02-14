@@ -1,25 +1,117 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import classNames from 'classnames';
 
-function App() {
+const months = [
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'Julius',
+  'September',
+  'October',
+  'November',
+  'December',
+];
+const days = [
+  'Monday',
+  'Tuesday',
+  'Wednesday',
+  'Thursday',
+  'Friday',
+  'Saturday',
+  'Sunday',
+];
+
+const DateTimePicker = () => {
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [currentWeek, setCurrentWeek] = useState(new Date());
+  const month = selectedDate.getMonth();
+  const dayNumber = selectedDate.getDate();
+  const year = selectedDate.getFullYear();
+
+  const renderWeek = () => {
+    return Array.from(days).map((day, idx) => (
+      <div
+        key={idx}
+        className={classNames('weekDays', {
+          currentDay: dayNumber === currentWeek.getDate() + idx,
+        })}
+        onClick={() =>
+          setSelectedDate(new Date(year, month, currentWeek.getDate() + idx))
+        }
+      >
+        <span>{day}</span>
+        <span>
+          {new Date(year, month, currentWeek.getDate() + idx).getDate()}
+        </span>
+      </div>
+    ));
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className='container'>
+      <div className='wrapper'>
+        <div className='selectedDate'>
+          <div>{selectedDate.getFullYear()}</div>
+          <div>{months[selectedDate.getMonth()]}</div>
+          <div>{selectedDate.getDate()}</div>
+        </div>
+        <div className='btnWrap'>
+          <button
+            onClick={() =>
+              setSelectedDate(new Date(year - 1, month, dayNumber))
+            }
+          >
+            Prev Year
+          </button>
+          <button
+            onClick={() =>
+              setSelectedDate(new Date(year + 1, month, dayNumber))
+            }
+          >
+            Next Year
+          </button>
+        </div>
+        <div className='btnWrap'>
+          <button
+            onClick={() =>
+              setSelectedDate(new Date(year, month - 1, dayNumber))
+            }
+          >
+            Prev Month
+          </button>
+          <button
+            onClick={() =>
+              setSelectedDate(new Date(year, month + 1, dayNumber))
+            }
+          >
+            Next Month
+          </button>
+        </div>
+        <div className='btnWrap'>
+          <button
+            onClick={() => {
+              setSelectedDate(new Date(year, month, dayNumber - 7));
+              setCurrentWeek(new Date(year, month, dayNumber - 7));
+            }}
+          >
+            Prev Week
+          </button>
+          <button
+            onClick={() => {
+              setSelectedDate(new Date(year, month, dayNumber + 7));
+              setCurrentWeek(new Date(year, month, dayNumber + 7));
+            }}
+          >
+            Next Week
+          </button>
+        </div>
+        <div className='currWeek'>{renderWeek()}</div>
+      </div>
     </div>
   );
-}
+};
 
-export default App;
+export default DateTimePicker;
